@@ -1,0 +1,424 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><title>KOCOK — Ludo & Ular Tangga (Supabase)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#150d3a;--y:#ffc933;--t:#fff;--m:#b9aee6;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--t);font:600 15px/1.35 "Baloo 2",system-ui,sans-serif;min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer}
+.wp{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.scr{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:68px 18px 36px}
+.btn{border:0;border-radius:18px;padding:14px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;box-shadow:0 5px 0 #0007;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #0007}
+.y{background:var(--y);color:#2a1d00}
+.chip{display:flex;align-items:center;gap:10px;background:#0006;border:2px solid #ffffff22;border-radius:40px;padding:6px 14px 6px 6px}
+#av{width:46px;height:46px;border-radius:50%;background:#7b4dff;border:3px solid var(--y);display:grid;place-items:center;font-weight:800;font-size:20px;position:relative;flex:none}
+#av b{position:absolute;right:-8px;bottom:-6px;background:var(--y);color:#2a1d00;border-radius:9px;font-size:11px;padding:0 6px;line-height:16px}
+.ci{flex:1;min-width:0}.ci small{color:var(--m);font-size:12px}
+#pn{background:none;border:0;color:#fff;font:800 16px "Baloo 2",sans-serif;width:100%;padding:0;outline:none;line-height:1.1}
+.bar{height:8px;background:#0006;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffc933,#ff8a3d);transition:width .4s}
+.logo{margin:26px 0 0;text-align:center;font-weight:800;font-size:76px;line-height:1;letter-spacing:.01em;-webkit-text-stroke:7px #150d3a;paint-order:stroke fill;text-shadow:0 7px 0 #0008}
+.logo i{display:inline-block;font-style:normal}.logo i:nth-child(odd){transform:translateY(-5px) rotate(-5deg)}.logo i:nth-child(even){transform:translateY(4px) rotate(4deg)}
+.tag{text-align:center;color:var(--m);margin:12px 0 26px;letter-spacing:.14em;font-size:12px;text-transform:uppercase}
+.tile{display:flex;width:100%;align-items:center;justify-content:space-between;text-align:left;padding:18px 20px;margin-bottom:16px;border-radius:22px;font-size:26px;line-height:1.05}
+.tile small{display:block;font-size:13px;font-weight:600;text-transform:none;letter-spacing:0;opacity:.85;margin-top:3px}
+.tile svg{height:50px;width:auto}
+.tl{background:#e53935}.ts{background:#1fa05a}
+.ft{text-align:center;color:var(--m);font-size:12px;margin-top:20px}
+#setup{position:fixed;inset:0;background:#0009;z-index:5;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#231659;border-radius:26px 26px 0 0;width:100%;max-width:480px;padding:20px 18px calc(22px + env(safe-area-inset-bottom,0px));border-top:3px solid #ffffff22;position:relative}
+.sheet h2{margin:0 0 6px;font-size:28px;font-weight:800}.sheet h4{margin:16px 0 8px;color:var(--m);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+#x{position:absolute;right:14px;top:14px;background:#ffffff18;border:0;border-radius:50%;width:34px;height:34px}
+.nums{display:flex;gap:8px}.nums button{flex:1;padding:11px 0;font-size:24px;font-weight:800;background:#ffffff14;border:2px solid transparent;border-radius:14px}
+.nums button.on{background:var(--y);color:#2a1d00}.nums button.off{opacity:.25;pointer-events:none}
+.slot{display:flex;align-items:center;gap:10px;padding:7px 4px}.slot i{width:26px;height:26px;border-radius:50%;border:3px solid #fff8}.slot span{flex:1}.slot em{color:var(--m);font-style:normal;font-size:13px}
+.slot button{background:#ffffff18;border:0;border-radius:12px;padding:3px 14px;font-weight:700;min-width:84px}
+#go{width:100%;margin-top:16px;font-size:20px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.top button{background:#0006;border:2px solid #ffffff22;border-radius:14px;padding:4px 14px}
+.top b{font-size:20px;font-weight:800}
+#strip{display:flex;gap:6px;margin-bottom:10px}
+.pl{flex:1;min-width:0;padding:5px 8px;border-radius:12px;background:#0006;border:2px solid transparent;font-size:12px;line-height:1.15;border-bottom:4px solid var(--c)}
+.pl b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}.pl small{color:var(--m)}
+.pl.on{background:#ffffff22;border-color:#fff}
+#board{width:100%;display:block;border-radius:14px;box-shadow:0 8px 0 #0006,0 0 0 5px #3a2a7a}
+.nm{font-size:8px;fill:#ffffff66;font-family:"Baloo 2",sans-serif}
+.tk.mv{cursor:pointer;animation:hop .45s infinite alternate}@keyframes hop{to{transform:translateY(-4px)}}
+.ctl{display:flex;align-items:center;gap:14px;margin-top:20px}
+#die{width:64px;height:64px;border-radius:14px;background:#f7f3ea;box-shadow:0 5px 0 #0007;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:9px;flex:none}
+#die b{display:block;border-radius:50%;margin:auto;width:10px;height:10px}#die b.p{background:#1a1030}
+#die.rl{animation:sh .14s infinite}@keyframes sh{50%{transform:rotate(10deg)}}
+#roll{flex:1;padding:19px;font-size:20px}#roll:disabled{opacity:.4}
+#msg{text-align:center;margin-top:16px;min-height:22px;color:var(--m)}
+#end{position:fixed;inset:0;background:#000b;z-index:6;display:grid;place-items:center;padding:20px}
+#end .box{background:#231659;border:3px solid var(--y);border-radius:26px;text-align:center;max-width:330px;width:100%;padding:26px}
+#et{font-size:30px;font-weight:800;margin:0;line-height:1.1}#ex{color:var(--y);margin:8px 0 18px;font-size:18px}
+#end button{width:100%;margin-top:10px}.gh{background:#ffffff18}
+#av{background:none;padding:2px;cursor:pointer}
+.avx{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:19px}
+#av.f1{border-color:#9fd3ff;box-shadow:0 0 0 3px #4c9dff66}
+#av.f2{border-color:#ff7ac8;box-shadow:0 0 0 3px #ff7ac866}
+#av.f3{border-color:transparent;background:conic-gradient(#ff5a52,#ffc933,#3fd37a,#4c9dff,#c78bff,#ff5a52)}
+#prof{position:fixed;inset:0;background:#0009;z-index:5;display:flex;align-items:flex-end;justify-content:center}
+#px{position:absolute;right:14px;top:14px;background:#ffffff18;border:0;border-radius:50%;width:34px;height:34px}
+.rw{display:flex;gap:8px;flex-wrap:wrap}
+.rw button{min-width:46px;height:46px;border-radius:14px;background:#ffffff14;border:2px solid transparent;font-size:20px;font-weight:800;padding:0 8px}
+.rw button.sw{border-radius:50%;width:42px;min-width:0;padding:0}
+.rw button.on{border-color:var(--y)}.rw button.lk{opacity:.4}
+.em{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.em button{width:46px;height:46px;border-radius:50%;background:#0006;border:2px solid #ffffff22;font-size:22px;padding:0;box-shadow:0 3px 0 #0007}
+.em button:active{transform:translateY(2px);box-shadow:none}
+.pl{position:relative}
+.bub{position:absolute;left:50%;top:100%;margin-top:-4px;z-index:4;transform:translateX(-50%);background:#fff;border-radius:16px;padding:0 9px;font-size:24px;line-height:1.35;box-shadow:0 3px 0 #0006;animation:pop .22s}
+@keyframes pop{from{transform:translateX(-50%) scale(.3)}}
+#lvup{position:fixed;inset:0;background:#000c;z-index:8;display:grid;place-items:center;padding:20px;overflow:hidden}
+.cf{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.lbox{position:relative;background:#231659;border:3px solid var(--y);border-radius:26px;text-align:center;max-width:320px;width:100%;padding:24px;animation:pop2 .4s}
+@keyframes pop2{from{transform:scale(.6);opacity:0}}
+.lbox small{letter-spacing:.2em;color:var(--m);font-weight:800}
+.lnum{font-size:96px;font-weight:800;line-height:1;color:var(--y);-webkit-text-stroke:5px #150d3a;paint-order:stroke fill;text-shadow:0 6px 0 #0008;margin:4px 0}
+.lt{font-size:15px;color:var(--m)}.lt b{display:block;font-size:30px;color:#fff;line-height:1.1}
+.lu{margin:12px 0;background:#ffffff14;border-radius:12px;padding:6px 10px;color:var(--y)}
+.lbox button{width:100%;margin-top:10px}
+.tn{background:#2f7de1}
+#onl{position:fixed;inset:0;background:#0009;z-index:5;display:flex;align-items:flex-end;justify-content:center}
+#ox{position:absolute;right:14px;top:14px;background:#ffffff18;border:0;border-radius:50%;width:34px;height:34px}
+#cd{width:100%;background:#ffffff14;border:2px solid transparent;border-radius:14px;color:#fff;font:800 28px 'Baloo 2',sans-serif;text-align:center;letter-spacing:.3em;text-transform:uppercase;padding:6px;outline:none}
+#cd:focus{border-color:var(--y)}
+.code{font-size:48px;font-weight:800;letter-spacing:.25em;text-align:center;color:var(--y);line-height:1.1}
+.note{color:var(--m);font-size:12px;text-align:center;margin-top:8px}
+.em{flex-wrap:wrap}.em button{width:42px;height:42px;font-size:20px}#cb{background:var(--y)!important}
+#chat{position:fixed;inset:0;background:#0009;z-index:5;display:flex;align-items:flex-end;justify-content:center}
+#cx{position:absolute;right:14px;top:14px;background:#ffffff18;border:0;border-radius:50%;width:34px;height:34px}
+.qs{display:flex;flex-wrap:wrap;gap:8px}.qs button{background:#ffffff18;border:2px solid transparent;border-radius:14px;padding:5px 12px;font-weight:700;font-size:14px;text-align:left}
+#ct{flex:1;min-width:0;background:#ffffff14;border:2px solid transparent;border-radius:14px;color:#fff;font:600 16px 'Baloo 2',sans-serif;padding:8px 12px;outline:none}#ct:focus{border-color:var(--y)}
+.bub.bt{font-size:13px;line-height:1.25;padding:4px 10px;max-width:160px;width:max-content;color:#150d3a;font-weight:700;text-align:center;white-space:normal;z-index:5}.bub+.bt{margin-top:46px}
+.bub svg,.bub img{width:42px;height:42px;display:block;border-radius:8px}.bub{padding:3px 6px!important}.bub.bt{padding:4px 10px!important}
+.em button{padding:0}.em button svg,.em button img{width:32px;height:32px;display:block;margin:auto;border-radius:6px}
+.em #cb,.em #sm{width:auto;border-radius:21px;padding:0 14px;font-size:13px;font-weight:800;text-transform:uppercase}
+.rw button img{width:38px;height:38px;border-radius:8px;display:block}
+.avx{overflow:hidden}.avx img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.many{flex-wrap:wrap}.many .pl{flex:1 1 31%}
+.sav{float:left;width:30px;height:30px;border-radius:50%;margin:1px 6px 0 0;border:2px solid var(--y);padding:0}.sav.f1{border-color:#9fd3ff}.sav.f2{border-color:#ff7ac8}.sav.f3{border-color:#c78bff}.sav .avx{font-size:13px}.sav .avx svg{width:14px;height:14px}
+#lbd{position:fixed;inset:0;background:#0009;z-index:5;display:flex;align-items:flex-end;justify-content:center}
+#lx{position:absolute;right:14px;top:14px;background:#ffffff18;border:0;border-radius:50%;width:34px;height:34px}
+#lbl{max-height:55vh;overflow:auto;margin-top:8px}.lr{display:flex;gap:10px;align-items:center;padding:7px 6px;border-radius:12px}.lr.me{background:#ffc93322}.lr b{width:26px;color:var(--y)}.lr span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lr em{color:var(--m);font-style:normal;font-size:13px}
+</style></head><body>
+<svg class="wp" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+<defs>
+<radialGradient id="g" cx=".5" cy=".2" r=".9"><stop offset="0" stop-color="#5a31c4"/><stop offset=".55" stop-color="#2a1a70"/><stop offset="1" stop-color="#150d3a"/></radialGradient>
+<symbol id="pw" viewBox="0 0 20 28"><circle cx="10" cy="7" r="5.5"/><path d="M10 11C3 15 2 22 1 26h18c-1-4-2-11-9-15z"/></symbol>
+<symbol id="lb" viewBox="0 0 90 90"><rect width="90" height="90" rx="6" fill="#f4ecd8"/><rect width="36" height="36" fill="#e53935"/><rect x="54" width="36" height="36" fill="#2e9e44"/><rect x="54" y="54" width="36" height="36" fill="#f6b60a"/><rect y="54" width="36" height="36" fill="#2f7de1"/><g fill="#fff" opacity=".9"><rect x="6" y="6" width="24" height="24" rx="4"/><rect x="60" y="6" width="24" height="24" rx="4"/><rect x="60" y="60" width="24" height="24" rx="4"/><rect x="6" y="60" width="24" height="24" rx="4"/></g></symbol>
+<symbol id="dc" viewBox="0 0 40 40"><rect x="2" y="2" width="36" height="36" rx="8" fill="#f7f3ea"/><g fill="#1a1030"><circle cx="12" cy="12" r="3.2"/><circle cx="28" cy="12" r="3.2"/><circle cx="20" cy="20" r="3.2"/><circle cx="12" cy="28" r="3.2"/><circle cx="28" cy="28" r="3.2"/></g></symbol>
+</defs>
+<rect width="400" height="800" fill="url(#g)"/>
+<use href="#lb" x="170" y="470" width="300" height="300" opacity=".4" transform="rotate(-16 320 620)"/>
+<use href="#lb" x="-140" y="40" width="240" height="240" opacity=".28" transform="rotate(14 -20 160)"/>
+<use href="#dc" x="14" y="560" width="62" height="62" opacity=".85" transform="rotate(-18 45 590)"/>
+<use href="#dc" x="318" y="214" width="44" height="44" opacity=".7" transform="rotate(22 340 236)"/>
+<use href="#dc" x="130" y="700" width="40" height="40" opacity=".6" transform="rotate(30 150 720)"/>
+<use href="#pw" x="34" y="396" width="34" height="48" fill="#e53935" opacity=".9"/><use href="#pw" x="330" y="470" width="30" height="42" fill="#f6b60a" opacity=".85"/><use href="#pw" x="300" y="680" width="36" height="50" fill="#2f7de1" opacity=".9"/><use href="#pw" x="70" y="250" width="26" height="36" fill="#2e9e44" opacity=".8"/>
+</svg>
+
+<div id="menu" class="scr">
+<div class="chip"><div id="av"></div><div class="ci"><input id="pn" maxlength="14" aria-label="Nama"><div class="bar"><i id="xpb"></i></div><small id="st"></small></div></div>
+<h1 class="logo"><i style="color:#ff5a52">K</i><i style="color:#ffc933">O</i><i style="color:#3fd37a">C</i><i style="color:#4c9dff">O</i><i style="color:#c78bff">K</i></h1>
+<div class="tag">Ludo &amp; Ular Tangga</div>
+<button class="btn tile tl" data-g="ludo"><span>Ludo<small>Bawa 4 pionmu pulang duluan</small></span><svg viewBox="0 0 90 28"><use href="#pw" x="0" width="20" height="28" fill="#ffc933" stroke="#0008"/><use href="#pw" x="23" width="20" height="28" fill="#3fd37a" stroke="#0008"/><use href="#pw" x="46" width="20" height="28" fill="#4c9dff" stroke="#0008"/><use href="#pw" x="69" width="20" height="28" fill="#fff" stroke="#0008"/></svg></button>
+<button class="btn tile ts" data-g="snake"><span>Ular Tangga<small>Panjat tangga, jauhi ular</small></span><svg viewBox="0 0 40 40"><use href="#dc" width="40" height="40"/></svg></button>
+<button class='btn tile tn' data-g='online'><span>Main Online<small>Bareng teman dari HP masing-masing</small></span><svg viewBox='0 0 40 40'><circle cx='20' cy='20' r='16' fill='none' stroke='#fff' stroke-width='3'/><path d='M4 20h32M20 4c-9 9-9 23 0 32M20 4c9 9 9 23 0 32' fill='none' stroke='#fff' stroke-width='2'/></svg></button>
+<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:4px"><button id="lbo" class="btn gh" style="padding:8px 16px;font-size:14px"></button><button id="mb" class="btn gh" style="padding:8px 16px;font-size:14px"></button></div>
+<div class="ft">Ketuk avatarmu untuk ganti tampilan · Main bergantian di satu layar</div></div>
+
+<div id="setup" hidden><div class="sheet"><button id="x" aria-label="Tutup">✕</button><h2 id="sg"></h2>
+<h4>Jumlah pemain</h4><div class="nums"><button data-n="2">2</button><button data-n="3">3</button><button data-n="4">4</button><button data-n="5">5</button></div>
+<h4>Kursi</h4><div id="slots"></div><button class="btn y" id="go">Mulai main</button></div></div>
+
+<div id="prof" hidden><div class="sheet"><button id="px" aria-label="Tutup">✕</button><h2>Profilku</h2><div id="ptl" style="color:var(--y);margin:-2px 0 4px"></div><h4>Foto</h4><div class='rw'><button id='pf' style='width:auto;padding:0 16px;font-size:14px'>Pilih dari galeri</button><button id='pr' style='width:auto;padding:0 16px;font-size:14px'>Hapus foto</button></div><input type='file' id='pi' accept='image/*' hidden><h4>Warna</h4><div class="rw" id="r1"></div><h4>Ikon</h4><div class="rw" id="r2"></div><h4>Bingkai (terbuka lewat level)</h4><div class="rw" id="r3"></div><button class="btn y" id="pd" style="width:100%;margin-top:16px">Selesai</button></div></div>
+<div id="game" class="scr" hidden>
+<div class="top"><button id="back">← Menu</button><b id="ttl"></b><button id="mu" style="width:70px" aria-label="Suara"></button></div>
+<div id="strip"></div><svg id="board" viewBox="0 0 300 300"></svg>
+<div id="tmr" hidden style="height:6px;background:#0006;border-radius:9px;overflow:hidden;margin-top:12px"><i id="tmi" style="display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff8a3d,#e53935)"></i></div>
+<div class="ctl"><div id="die"></div><button id="roll" class="btn y">Kocok dadu</button></div><div id="msg"></div><div class="em" id="em"></div></div>
+<div id='sk' hidden><div class='sheet'><button id='kx' aria-label='Tutup'>✕</button><h2>Stikerku</h2><div class='note' style='text-align:left'>Pilih gambar dari HP (foto, meme, gambar buatanmu). Maksimal 6, dikecilkan otomatis, dan dilihat pemain lain saat kamu mengirimnya. Ketuk gambar untuk menghapus.</div><div class='rw' id='sl' style='margin-top:12px'></div><input type='file' id='sf' accept='image/*' hidden><button class='btn y' id='sa' style='width:100%;margin-top:14px'>Tambah gambar</button></div></div>
+<div id='chat' hidden><div class='sheet'><button id='cx' aria-label='Tutup'>✕</button><h2>Chat Tengil</h2><h4>Kalimat cepat</h4><div class='qs' id='qs'></div><h4>Ketik sendiri</h4><div style='display:flex;gap:8px'><input id='ct' maxlength='40' placeholder='Ketik ejekanmu…' autocomplete='off' aria-label='Pesan'><button class='btn y' id='cs'>Kirim</button></div></div></div>
+<div id='onl' hidden><div class='sheet'><button id='ox' aria-label='Tutup'>✕</button><h2>Main Online</h2><div id='ob'></div></div></div>
+<div id="lbd" hidden><div class="sheet"><button id="lx" aria-label="Tutup">✕</button><h2>Peringkat</h2><div class="note" style="text-align:left;margin:0">Menang terbanyak di game online bareng teman.</div><div id="lbl"></div></div></div>
+<div id="lvup" hidden></div>
+<div id="end" hidden><div class="box"><p id="et"></p><p id="ex"></p><div id="rqb" hidden><p id="rqt" style="color:var(--m);margin:0"></p><div id="rqa" style="display:flex;gap:8px"><button class="btn y" id="ry" style="flex:1;width:auto">Setuju</button><button class="btn gh" id="rno" style="flex:1;width:auto">Tidak</button></div></div><button id="rm" class="btn y" hidden>Ajak rematch</button><button id="again" class="btn y">Main lagi</button><button id="home" class="btn gh">Menu</button></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+/* ===== Supabase (URL + publishable key) ===== */
+const SUPA_URL='https://dxorcuylsscsyzlbwqro.supabase.co',SUPA_KEY='sb_publishable_636yVMw0u728z6x0Cn2Afw_a00KjknX';
+/* ================================================================ */
+const myId=Math.random().toString(36).slice(2,10);
+const SBROOM=(window.supabase&&SUPA_URL&&SUPA_KEY)?(()=>{const sb=supabase.createClient(SUPA_URL,SUPA_KEY,{realtime:{params:{eventsPerSecond:20}}});
+return{db:sb,join:name=>new Promise((res,rej)=>{
+const ch=sb.channel(name,{config:{broadcast:{self:true},presence:{key:myId}}}),H={},PH=[],me={};
+const peers=()=>Object.entries(ch.presenceState()).map(([k,v])=>({peer:k,isMe:k==myId,sameTab:k==myId,kind:'viewer',presence:Object.assign({},...v)}));
+ch.on('broadcast',{event:'*'},({event,payload})=>{(H[event]||[]).forEach(f=>f({topic:event,data:payload.data,peer:payload.peer,isMe:payload.peer==myId,sameTab:payload.peer==myId}))});
+ch.on('presence',{event:'sync'},()=>PH.forEach(f=>f({peers:peers(),left:[]})));
+ch.on('presence',{event:'leave'},({key})=>PH.forEach(f=>f({peers:peers(),left:[{peer:key}]})));
+const room={emit:(t,data)=>ch.send({type:'broadcast',event:t,payload:{data,peer:myId}}),
+on:(t,f)=>{(H[t]=H[t]||[]).push(f);return()=>{}},
+presence:p=>{Object.assign(me,p);return ch.track(me)},
+peers,onPeers:f=>{PH.push(f);return()=>{}},
+leave:()=>sb.removeChannel(ch)};
+ch.subscribe(st=>{if(st=='SUBSCRIBED')res(room);else if(st=='CHANNEL_ERROR'||st=='TIMED_OUT')rej({code:st})})})}})():null;
+</script>
+<script>
+const $=s=>document.querySelector(s),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const COL=['#e53935','#2e9e44','#f6b60a','#2f7de1','#8e4fd6'],NM=['Merah','Hijau','Kuning','Biru','Ungu'],BN=['','Raka','Sinta','Dimas','Laras'],RK=['Pemula','Pemain','Jago','Master','Legenda'];
+const SEATS={2:[0,2],3:[0,1,2],4:[0,1,2,3],5:[0,1,2,3,4]};
+let P={name:'Pemain',xp:0,w:0,g:0,ac:0,ic:'L',fr:0,mine:[],ph:''};
+try{Object.assign(P,JSON.parse(localStorage.getItem('kocok1')||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem('kocok1',JSON.stringify(P))}catch(e){}};
+if(!P.pid||String(P.pid).length<8){P.pid=Math.random().toString(36).slice(2)+Date.now().toString(36);save()}
+/* ===== Efek suara (WebAudio, tanpa file) ===== */
+const SFX=(()=>{let ac,mg,nb;
+const ctx=()=>{if(P.snd===0)return null;try{if(!ac){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ac=new A();mg=ac.createGain();mg.gain.value=.55;mg.connect(ac.destination);const n=ac.sampleRate>>1,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;nb=b}if(ac.state!='running')ac.resume()}catch(e){return null}return ac};
+const tone=(f,t,d,ty,v,f2,dst)=>{const a=ctx();if(!a)return;const s=a.currentTime+t,o=a.createOscillator(),g=a.createGain();o.type=ty||'sine';o.frequency.setValueAtTime(f,s);if(f2)o.frequency.exponentialRampToValueAtTime(f2,s+d);g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(v||.25,s+.012);g.gain.exponentialRampToValueAtTime(.0001,s+d);o.connect(g);g.connect(dst||mg);o.start(s);o.stop(s+d+.03)};
+const nz=(t,d,fq,v)=>{const a=ctx();if(!a)return;const s=a.currentTime+t,n=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();n.buffer=nb;f.type='bandpass';f.frequency.value=fq;f.Q.value=1.5;g.gain.setValueAtTime(v||.25,s);g.gain.exponentialRampToValueAtTime(.0001,s+d);n.connect(f);f.connect(g);g.connect(mg);n.start(s);n.stop(s+d)};
+let mt=null,mi=0,nx=0,mm=null;
+const MEL=[523,659,784,659,880,784,659,523,587,698,880,698,784,698,587,494,523,659,784,1047,880,784,659,784,698,659,587,659,523,0,523,0],BAS=[131,131,196,196,175,175,196,196];
+const sched=()=>{const a=ctx();if(!a){return}if(!mm){mm=a.createGain();mm.gain.value=.2;mm.connect(mg)}while(nx<a.currentTime+.6){const i=mi%32,t=Math.max(0,nx-a.currentTime),f=MEL[i];if(f)tone(f,t,.22,'square',.5,0,mm);if(i%4==0)tone(BAS[i>>2],t,.45,'triangle',.8,0,mm);if(i%2)nz(t,.04,7000,.03);nx+=.25;mi++}};
+const arp=(a,gap,d,ty,v)=>a.forEach((f,i)=>tone(f,i*gap,d,ty,v));
+return{click:()=>tone(700,0,.05,'square',.07),
+rattle:()=>{nz(0,.05,2200+Math.random()*1800,.22);tone(160+Math.random()*120,0,.05,'triangle',.12)},
+land:()=>{tone(260,0,.14,'triangle',.3,90);nz(0,.09,900,.3)},
+step:n=>tone(430+(n||0)*35,0,.08,'triangle',.2,330+(n||0)*20),
+out:()=>arp([523,784],.08,.14,'square',.1),
+capture:()=>{tone(420,0,.32,'sawtooth',.16,80);nz(0,.18,500,.3)},
+home:()=>arp([523,659,784,1047],.09,.16,'sine',.25),
+turn:()=>arp([880,1175],.09,.14,'sine',.14),
+nope:()=>tone(220,0,.22,'square',.09,140),
+ladder:()=>arp([392,440,494,523,587,659,784,988],.055,.12,'triangle',.2),
+snake:()=>{tone(700,0,.7,'sawtooth',.12,110);tone(698,0,.7,'sine',.05,100)},
+pop:()=>tone(650,0,.09,'sine',.22,1100),
+lvl:()=>arp([523,659,784,1047,784,1047,1319],.1,.2,'triangle',.25),
+win:()=>{arp([523,523,523,659,784,1047],.12,.22,'square',.1);arp([262,330,392,523],.12,.4,'triangle',.12)},
+lose:()=>arp([392,370,349,294],.18,.3,'triangle',.18),
+music:on=>{if(!on){if(mt){clearInterval(mt);mt=null}return}if(mt)return;const a=ctx();if(!a)return;nx=a.currentTime+.1;mi=0;sched();mt=setInterval(sched,200)}}})();
+function rmui(m,t){if(!G)return;G.rq=(m=='ask'||m=='wait')?1:0;$('#rqb').hidden=!m;$('#rqt').textContent=t||'';$('#rqa').hidden=m!='ask';$('#rm').hidden=!(G.online&&G.over)||G.rq==1}
+let uz=0;const syncMus=()=>SFX.music(uz&&!$('#menu').hidden&&P.mus!==0&&P.snd!==0),mbu=()=>{$('#lbo').innerHTML=ICN.tr+' Peringkat';$('#mb').innerHTML=ICN.mus+(P.mus===0?' Musik: mati':' Musik: nyala')};
+addEventListener('pointerdown',()=>{uz=1;syncMus()},{once:true});
+const IC=(d,w)=>`<svg viewBox='0 0 24 24' width='${w||20}' height='${w||20}' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' style='display:inline-block;vertical-align:-4px'>${d}</svg>`,
+SPK="<path d='M4 9v6h4l5 4V5L8 9z' fill='currentColor'/>",
+ICN={on:IC(SPK+"<path d='M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12'/>"),off:IC(SPK+"<path d='M17 9l5 6M22 9l-5 6'/>"),mus:IC("<path d='M9 18V6l10-2v12'/><circle cx='6.5' cy='18' r='2.5' fill='currentColor'/><circle cx='16.5' cy='16' r='2.5' fill='currentColor'/>",18),lk:IC("<rect x='5' y='11' width='14' height='10' rx='2' fill='currentColor'/><path d='M8 11V8a4 4 0 018 0v3'/>",16),tr:IC("<path d='M7 4h10v5a5 5 0 01-10 0z' fill='currentColor'/><path d='M7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3M12 14v4M8 20h8'/>",18)};
+const mub=()=>{$('#mu').innerHTML=P.snd===0?ICN.off:ICN.on};
+function lvl(x){let l=1,n=100;while(x>=n){x-=n;l++;n+=60}return{l,cur:x,n}}
+const cfg={game:'ludo',n:4,bot:[0,1,1,1,1]};
+const pname=i=>G&&G.names?G.names[i]:i==0?P.name:cfg.bot[i]?'Bot '+BN[i]:'Pemain '+(i+1);
+const pawn=(x,y,c,cls,d,w=14)=>`<use class="tk ${cls}" ${d} href="#pw" x="${x-w/2}" y="${y-w*1.15}" width="${w}" height="${w*1.4}" fill="${c}" stroke="#0008" stroke-width="1.3"/>`;
+const AC=['#7b4dff','#e53935','#2e9e44','#f6b60a','#2f7de1','#ff7ac8','#13b5b1','#ff8a3d'],AI=['L','pw','dc','★','♛'],FR=[['Emas',1],['Biru',3],['Pink',5],['Pelangi',8]];
+const okP=p=>typeof p=='string'&&/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(p)&&p.length<14000;
+function avg(a,nm){if(okP(a.p))return`<div class="avx"><img src='${a.p}' alt=''></div>`;const i=a.i,x=i=='L'?(String(nm)[0]||'P').toUpperCase():i=='pw'||i=='dc'?`<svg viewBox="${i=='pw'?'0 0 20 28':'0 0 40 40'}" width="24" height="24"><use href="#${i}" fill="#fff" stroke="#0008"/></svg>`:AI.includes(i)?i:'';return`<div class="avx" style="background:${AC[a.c]||AC[0]}">${x}</div>`}
+const avh=()=>avg({c:P.ac,i:P.ic,p:P.ph},P.name),
+cav=a=>{a=a&&typeof a=='object'?a:{};return{c:Number.isInteger(a.c)&&a.c>=0&&a.c<8?a.c:0,i:AI.includes(a.i)?a.i:'L',f:Number.isInteger(a.f)&&a.f>=0&&a.f<4?a.f:0,p:okP(a.p)?a.p:''}},
+avc=i=>{let a=G.avs&&G.avs[i];if(!a)a=i==0&&!G.online?{c:P.ac,i:P.ic,f:P.fr,p:P.ph}:{c:(i+1)%8,i:cfg.bot[i]?'pw':'L',f:0,p:''};return`<span class='sav f${a.f}'>${avg(a,pname(i))}</span>`};
+function crop(f,z,cb){const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=z;const x=c.getContext('2d'),m=Math.min(im.width,im.height);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,z,z);URL.revokeObjectURL(u);let d=c.toDataURL('image/webp',.75);if(!d.startsWith('data:image/webp')){x.globalCompositeOperation='destination-over';x.fillStyle='#fff';x.fillRect(0,0,z,z);d=c.toDataURL('image/jpeg',.7)}if(d.length>=14000)d=c.toDataURL('image/jpeg',.5);if(d.length<14000)cb(d)};im.src=u}
+function av(){$('#av').className='f'+P.fr;$('#av').innerHTML=avh()+'<b>'+lvl(P.xp).l+'</b>'}
+function pedit(){const L=lvl(P.xp).l,nt=L<13?(Math.floor((L-1)/3)+1)*3+1:0;$('#ptl').textContent='Gelar: '+RK[Math.min(4,(L-1)/3|0)]+' · Lv '+L+(nt?' · gelar berikutnya di Lv '+nt:'');
+$('#r1').innerHTML=AC.map((c,i)=>`<button class="sw${i==P.ac?' on':''}" data-ac="${i}" style="background:${c}" aria-label="Warna"></button>`).join('');
+$('#r2').innerHTML=AI.map(k=>`<button class="${k==P.ic?'on':''}" data-ic="${k}">${k=='L'?'Aa':k=='pw'?'♟':k=='dc'?'⚄':k}</button>`).join('');
+$('#r3').innerHTML=FR.map(([n,l],i)=>`<button class="${i==P.fr?'on':''}${L<l?' lk':''}" style="font-size:14px;padding:0 14px" data-fr="${i}">${L<l?ICN.lk+' Lv '+l:n}</button>`).join('');av()}
+function lvup(b,a){SFX.lvl();const T=l=>RK[Math.min(4,(l-1)/3|0)],t0=T(b),t1=T(a),un=FR.map((f,i)=>[f,i]).filter(([f])=>f[1]>b&&f[1]<=a);
+const cf=Array.from({length:36},(_,i)=>`<i class="cf" style="left:${Math.random()*100}%;background:${COL[i%5]};animation-delay:${Math.random()*1.2}s;animation-duration:${2+Math.random()*1.5}s"></i>`).join('');
+$('#lvup').innerHTML=cf+`<div class="lbox"><small>NAIK LEVEL</small><div class="lnum">${a}</div><div class="lt">${t1!=t0?'Gelar baru':'Gelarmu'}<b>${t1}</b></div>${un.length?`<div class="lu">Terbuka: bingkai ${un.map(([f])=>f[0]).join(', ')}</div>`:''}<button class="btn y" id="lok">Lanjut</button>${un.length?`<button class="btn gh" id="lfr" data-f="${un[un.length-1][1]}">Pakai bingkai baru</button>`:''}</div>`;$('#lvup').hidden=false}
+const NET={room:null,code:'',host:0,map:{},gx:null,err:'',hp:null},cl=s=>String(s).replace(/[<>&"'`]/g,'').slice(0,14);
+function oleave(){try{NET.room&&NET.room.leave()}catch(e){}NET.room=null;NET.code='';NET.host=0;NET.hp=null;NET.map={}}
+function onOpen(){NET.err='';$('#onl').hidden=false;orender()}
+function sync(){if(!G||!G.online||!G.host||!NET.room)return;NET.room.emit('st',{c:G.cur,b:G.busy,w:G.wait,d:G.d,T:G.T,p:G.pos,m:G.m,o:G.over?1:0,v:G.win,tm:G.tm,tl:G.tl}).catch(()=>{})}
+function cstart(d,me){G={t:d.g,n:d.n,cur:0,busy:true,over:false,wait:null,d:0,S:SEATS[d.n],online:1,host:0,me,spec:me<0?1:0,hum:Math.max(1,Math.min(5,+d.hum||1)),names:d.names,avs:(Array.isArray(d.avs)?d.avs:[]).slice(0,5).map(cav),m:''};if(G.t=='ludo')G.T=Array.from({length:G.n},()=>[-1,-1,-1,-1]);else G.pos=Array(G.n).fill(0);lyset();rmui('');SFX.music(false);$('#onl').hidden=true;$('#menu').hidden=true;$('#game').hidden=false;$('#end').hidden=true;$('#again').hidden=true;$('#ttl').textContent=(G.t=='ludo'?'Ludo':'Ular Tangga')+(G.spec?' · Menonton':'');$('#roll').hidden=!!G.spec;$('#em').hidden=!!G.spec;$('#roll').disabled=true;die(1);draw()}
+function capply(s){if(!G||!G.online||G.host||G.over)return;
+{let sn=null;const al=(a,b)=>{if(a==null||a==b)return;if(a<0&&b>=0)sn='out';else if(a>=0&&b<0)sn='capture';else if(G.t=='ludo'){if(b==G.GL)sn='home';else if(b>a)sn=sn||'step'}else{if(b<a)sn='snake';else if(b-a>1)sn='ladder';else sn=sn||'step'}};
+if(s.T&&G.T)s.T.forEach((t,i)=>t.forEach((p,k)=>al(G.T[i]&&G.T[i][k],p)));if(s.p&&G.pos)s.p.forEach((p,i)=>al(G.pos[i],p));
+if(s.d&&s.d!=G.d)SFX.land();if(sn)SFX[sn]();else if(s.c==G.me&&!s.b&&(G.cur!=s.c||G.busy))SFX.turn()}
+if(s.tm!==G.tm){G.tm=s.tm;tmBar(s.tl||0)}G.cur=s.c;G.busy=s.b;G.wait=s.w;G.d=s.d;if(s.T)G.T=s.T;if(s.p)G.pos=s.p;if(s.d)die(s.d);msg(s.m||'');draw();$('#roll').disabled=!(G.cur==G.me&&!G.busy&&!s.o);if(s.o)fin(s.v)}
+function orender(){const b=$('#ob');
+if(!NET.code){b.innerHTML=`<h4>Buat room</h4><div style='display:grid;grid-template-columns:1fr 1fr;gap:8px'><button class='btn y' data-oc='ludo'>Ludo</button><button class='btn y' data-oc='snake'>Ular Tangga</button></div><h4>Atau gabung</h4><input id='cd' maxlength='4' placeholder='KODE' aria-label='Kode room' autocomplete='off'><button class='btn gh' id='oj' style='width:100%;margin-top:10px'>Gabung</button><div class='note'>${NET.err}</div><div class='note'>Teman cukup membuka link game ini lalu memasukkan kode.</div>`;return}
+const ps=NET.room.peers().filter(p=>p.kind=='viewer'&&p.presence.nm).sort((a,c)=>(c.presence.host?1:0)-(a.presence.host?1:0)||a.presence.t-c.presence.t),hp=ps.find(p=>p.presence.host);
+if(!hp){b.innerHTML=`<div class='code'>${NET.code.toUpperCase()}</div><div class='note'>Mencari room…</div>`;return}
+const g=NET.host?cfg.game:hp.presence.g,n=Math.max(2,Math.min(5,NET.host?cfg.n:+hp.presence.n||2));
+const rows=Array.from({length:n},(_,i)=>{const p=ps[i],c=g=='ludo'?SEATS[n][i]:i;return`<div class='slot'><i style='background:${COL[c]}'></i><span>${p?cl(p.presence.nm):'Bot '+BN[i]}</span><em>${p?(p.presence.host?'Host':p.isMe?'Kamu':''):'Bot'}</em></div>`}).join('');
+b.innerHTML=`<div class='code'>${NET.code.toUpperCase()}</div><div class='note'>Bagikan kode ini ke temanmu</div><h4>${g=='ludo'?'Ludo':'Ular Tangga'} · ${n} pemain</h4>${rows}${ps.length>n?`<div class='note'>+${ps.length-n} orang jadi penonton</div>`:''}`+(NET.host?`<div class='nums' style='margin-top:12px'>${[2,3,4,5].filter(k=>g!='ludo'||k<5).map(k=>`<button data-on='${k}' class='${k==n?'on':''}'>${k}</button>`).join('')}</div><button class='btn y' id='os' style='width:100%;margin-top:14px'>Mulai main</button>`:`<div class='note' style='margin-top:12px'>${hp.presence.live?'Game sedang berjalan, kamu masuk sebagai penonton…':'Menunggu host memulai…'}</div>`)}
+async function oconn(code,host){
+const R=SBROOM;
+if(!R){NET.err='Isi SUPA_URL dan SUPA_KEY di bagian atas file dulu.';return orender()}
+let o;try{o=await R.join('k'+code)}catch(e){NET.err='Gagal masuk room ('+(e&&e.code||'error')+')';return orender()}
+Object.assign(NET,{room:o,code,host,map:{},hp:null,sp:{}});
+o.presence(Object.assign({nm:cl(P.name),t:Date.now(),av:{c:P.ac,i:P.ic,f:P.fr,p:P.ph}},host?{host:1,g:cfg.game,n:cfg.n}:{}));
+o.onPeers(c=>{if($('#onl').hidden===false)orender();if(!G||!G.online)return;if(G.host)c.peers.forEach(p=>{if(p.isMe||!p.presence||p.presence.host||!p.presence.nm||NET.map[p.peer]!=null||NET.sp[p.peer])return;NET.sp[p.peer]=1;NET.room.emit('go',{g:G.t,n:G.n,names:G.names,map:NET.map,avs:G.avs,hum:G.hum,b:G.t=='snake'?{L:LAD,S:SNK}:null,to:p.peer});setTimeout(sync,300)});
+if(G.host)c.left.forEach(p=>{const s=NET.map[p.peer];if(s>0&&G.rem[s]){G.rem[s]=false;cfg.bot[s]=1;G.names[s]='Bot '+BN[s];if(G.wait&&G.cur==s){const k=pick(s,G.d,G.wait);G.wait=null;lMove(s,k)}else if(G.cur==s&&!G.busy&&!G.over)tick(true,true)}});else if(c.left.some(p=>p.peer==NET.hp)){msg('Host keluar dari room');$('#roll').disabled=true}});
+o.on('go',m=>{const hp=o.peers().find(p=>p.peer==m.peer),d=m.data;if(NET.host||!hp||!hp.presence.host||!d||!['ludo','snake'].includes(d.g)||!(d.n>=2&&d.n<=5))return;if(d.to&&d.to!=myId)return;const my=o.peers().find(p=>p.sameTab)||o.peers().find(p=>p.isMe),me=my&&d.map?d.map[my.peer]:null;d.names=(Array.isArray(d.names)?d.names:[]).map(cl);if(d.g=='snake'&&d.b){LAD=vb(d.b.L);SNK=vb(d.b.S)}NET.hp=m.peer;cstart(d,me==null?-1:me)});
+o.on('st',m=>{if(!NET.host&&m.peer==NET.hp&&m.data)capply(m.data)});
+o.on('act',m=>{if(!NET.host||!G||!G.host||G.over||!m.data)return;const s=NET.map[m.peer];if(s==null||s!=G.cur||!G.rem[s])return;if(G.miss)G.miss[s]=0;if(m.data.t=='roll')roll();else if(m.data.t=='mv'&&G.wait&&G.wait.includes(m.data.k))lMove(G.cur,m.data.k)});
+o.on('rq',m=>{if(!G||!G.online||!G.over||G.rq||G.spec)return;const d=m.data||{},nm=cl(d.nm||'Teman');if(NET.host){const s=m.peer==myId?0:NET.map[m.peer];if(s==null)return;NET.rm={y:{[s]:1}}}rmui(m.isMe?'wait':'ask',m.isMe?'Menunggu jawaban teman…':nm+' ajak rematch')});
+o.on('ra',m=>{if(!NET.host||!G||!G.over||!NET.rm||!m.data)return;const s=m.peer==myId?0:NET.map[m.peer];if(s==null)return;NET.rm.y[s]=m.data.y?1:0;const R=NET.rm.y;if(Object.values(R).includes(0)){NET.rm=null;o.emit('rn',{});return}const need=[0].concat(G.rem.map((v,i)=>v&&i>0?i:-1).filter(i=>i>0));if(need.every(i=>R[i])){NET.rm=null;ostart()}});
+o.on('rn',()=>{if(G&&G.online&&G.over){NET.rm=null;rmui('no','Rematch ditolak')}});
+o.on('em',m=>{const d=m.data||{};if(G&&G.online&&Number.isInteger(d.i)&&d.i>=0&&d.i<G.n&&okE(d.e)){G.fromNet=1;emote(d.i,d.e,1);G.fromNet=0}});
+o.on('ch',m=>{const d=m.data||{};if(G&&G.online&&Number.isInteger(d.i)&&d.i>=0&&d.i<G.n&&typeof d.t=='string'){G.fromNet=1;chat(d.i,d.t,1);G.fromNet=0}});
+if(!host)setTimeout(()=>{if(NET.room===o&&!o.peers().some(p=>p.presence.host)){oleave();NET.err='Room '+code.toUpperCase()+' tidak ditemukan';orender()}},3500);
+orender()}
+function ostart(){const ps=NET.room.peers().filter(p=>p.kind=='viewer'&&p.presence.nm&&!p.presence.host).sort((a,c)=>a.presence.t-c.presence.t).slice(0,cfg.n-1),names=[P.name],map={};
+for(let i=1;i<cfg.n;i++){const p=ps[i-1];cfg.bot[i]=p?0:1;names[i]=p?cl(p.presence.nm):'Bot '+BN[i];if(p)map[p.peer]=i}
+const avs=names.map((_,i)=>i==0?cav({c:P.ac,i:P.ic,f:P.fr,p:P.ph}):ps[i-1]?cav(ps[i-1].presence.av):{c:i,i:'pw',f:0,p:''});
+if(cfg.game=='snake'){const[l,s]=genBoard();LAD=l;SNK=s}
+NET.map=map;NET.sp={};NET.room.peers().forEach(p=>{NET.sp[p.peer]=1});NET.room.presence({live:1});NET.gx={online:1,host:1,me:0,rem:names.map((_,i)=>!!ps[i-1]),names,avs,hum:ps.length+1};
+NET.room.emit('go',{g:cfg.game,n:cfg.n,names,map,avs,hum:ps.length+1,b:cfg.game=='snake'?{L:LAD,S:SNK}:null});start()}
+const TQ=['Yah kena lagi','Lambat banget, ngantuk nih','Udah nyerah aja deh','Kasian… mau tisu?','Dadunya kok gitu sih','Pionnya pulang ya?','Jangan nangis ya','GG gampang banget','Cepetan dong, aku udah tua','Wkwkwk','Santai, kalah itu biasa','Belajar dulu gih'],TW=['Yah kena lagi','Pulang dulu ya','Gampang banget wkwk','Kasian… mau tisu?'],TL=['Awas ya, nanti kubales','Curang nih dadunya!','Cuma lagi sial'],TU=['Enak ya jadi aku','Naik tangga dong'],TRP=['Sombong amat','Liat aja nanti','Ngomong doang','Baru juga mulai'];
+const cs=s=>String(s).replace(/[<>&"'`]/g,'').trim().slice(0,40),sid=()=>G.online?G.me:(cfg.bot[G.cur]?0:G.cur);
+let lastC=0;
+function chat(i,t,auto){if(!G||G.over)return;t=cs(t);if(!t)return;const n=Date.now();if(!auto){if(n-lastC<1500)return;lastC=n}if(G.online&&!G.fromNet){if(!auto||G.host)NET.room.emit('ch',{i,t});return}SFX.pop();G.ch=G.ch||{};G.ct=G.ct||{};clearTimeout(G.ct[i]);G.ch[i]=t;strip();G.ct[i]=setTimeout(()=>{if(G&&G.ch){delete G.ch[i];strip()}},4000)}
+const tj=(i,a)=>{if(cfg.bot[i]&&Math.random()<.5)setTimeout(()=>chat(i,a[Math.random()*a.length|0],1),900+Math.random()*600)};
+function reply(){if(!G||G.online)return;const b=[];for(let j=0;j<G.n;j++)if(cfg.bot[j])b.push(j);if(b.length&&Math.random()<.7){const j=b[Math.random()*b.length|0];setTimeout(()=>{emote(j,['noob','smug','bocil','lemot'][Math.random()*4|0],1);if(Math.random()<.6)chat(j,TRP[Math.random()*TRP.length|0],1)},800)}}
+const bd=(t,c,k,z)=>`<svg viewBox='0 0 48 48'><g transform='rotate(-8 24 24)'><rect x='2' y='9' width='44' height='30' rx='9' fill='${c}' stroke='#150d3a' stroke-width='3'/><text x='24' y='28' text-anchor='middle' font-family='Baloo 2,sans-serif' font-weight='800' font-size='${z}' fill='${k}'>${t}</text></g></svg>`,
+fc=b=>`<svg viewBox='0 0 48 48'><circle cx='24' cy='24' r='20' fill='#ffd23f' stroke='#150d3a' stroke-width='3'/>${b}</svg>`,
+ln="fill='none' stroke='#150d3a' stroke-width='3' stroke-linecap='round'";
+const STK={
+smug:fc(`<path d='M10 21q5-5 10 0M28 21q5-5 10 0' ${ln}/><circle cx='15' cy='22' r='2' fill='#150d3a'/><circle cx='33' cy='22' r='2' fill='#150d3a'/><path d='M14 32q12 6 20-4' ${ln}/>`),
+sleep:fc(`<path d='M11 22q4 4 8 0M29 22q4 4 8 0' ${ln}/><ellipse cx='24' cy='33' rx='4' ry='5' fill='#150d3a'/><text x='35' y='13' font-size='11' font-weight='800' fill='#150d3a' font-family='sans-serif'>z</text>`),
+cry:fc(`<circle cx='16' cy='21' r='3' fill='#150d3a'/><circle cx='32' cy='21' r='3' fill='#150d3a'/><path d='M14 24v12M34 24v12' stroke='#4aa8ff' stroke-width='4' stroke-linecap='round'/><path d='M16 36q8-6 16 0' ${ln}/>`),
+noob:bd('NOOB','#e53935','#fff',12),lemot:bd('LEMOT','#f6b60a','#150d3a',11),kasian:bd('KASIAN','#8e4fd6','#fff',9),ampun:bd('AMPUN','#2f7de1','#fff',10),wkwk:bd('WKWK','#2e9e44','#fff',11),bocil:bd('BOCIL','#ff7ac8','#150d3a',11),ez:bd('GG EZ','#ff8a3d','#150d3a',11)};
+const hs=e=>Object.prototype.hasOwnProperty.call(STK,e),okE=e=>typeof e=='string'&&(hs(e)||(/^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(e)&&e.length<12000)),emh=e=>hs(e)?STK[e]:okE(e)?`<img src='${e}' alt=''>`:'';
+function emrow(){$('#em').innerHTML=Object.keys(STK).map(k=>`<button data-em='${k}' aria-label='Stiker ${k}'>${STK[k]}</button>`).join('')+P.mine.map((u,i)=>`<button data-me='${i}' aria-label='Stikerku'><img src='${u}' alt=''></button>`).join('')+`<button id='cb'>Chat</button><button id='sm'>+ Stiker</button>`}
+function skr(){$('#sl').innerHTML=P.mine.map((u,i)=>`<button data-kd='${i}' aria-label='Hapus'><img src='${u}' alt=''></button>`).join('')||`<div class='note'>Belum ada gambar</div>`;$('#sa').hidden=P.mine.length>=6}
+function addImg(f){const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=72;const x=c.getContext('2d'),m=Math.min(im.width,im.height);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,72,72);URL.revokeObjectURL(u);let d=c.toDataURL('image/webp',.75);if(!d.startsWith('data:image/webp')){x.globalCompositeOperation='destination-over';x.fillStyle='#fff';x.fillRect(0,0,72,72);d=c.toDataURL('image/jpeg',.7)}if(P.mine.length<6&&d.length<12000){P.mine.push(d);save();emrow();skr()}};im.src=u}
+let lastE=0;
+function emote(i,e,auto){if(!G||G.over)return;const n=Date.now();if(!auto){if(n-lastE<1200)return;lastE=n}if(G.online&&!G.fromNet){if(!auto||G.host)NET.room.emit('em',{i,e});return}SFX.pop();G.em=G.em||{};G.et=G.et||{};clearTimeout(G.et[i]);G.em[i]=e;strip();G.et[i]=setTimeout(()=>{if(G&&G.em){delete G.em[i];strip()}},2000)}
+const react=(i,a)=>{if(cfg.bot[i]&&Math.random()<.75)setTimeout(()=>emote(i,a[Math.random()*a.length|0],1),400+Math.random()*500)};
+function menu(){mbu();syncMus();const v=lvl(P.xp);$('#pn').value=P.name;av();$('#xpb').style.width=v.cur/v.n*100+'%';$('#st').textContent=RK[Math.min(4,(v.l-1)/3|0)]+' · '+v.cur+'/'+v.n+' XP · '+P.w+' menang'}
+function setup(){const lu=cfg.game=='ludo';if(lu&&cfg.n>4)cfg.n=4;$('#sg').textContent=lu?'Ludo':'Ular Tangga';
+document.querySelectorAll('[data-n]').forEach(b=>{b.classList.toggle('on',+b.dataset.n==cfg.n);b.classList.remove('off');b.hidden=lu&&+b.dataset.n>4});
+$('#slots').innerHTML=Array.from({length:cfg.n},(_,i)=>{const c=lu?SEATS[cfg.n][i]:i;return`<div class="slot"><i style="background:${COL[c]}"></i><span>${pname(i)} <em>${NM[c]}</em></span>${i?`<button data-s="${i}">${cfg.bot[i]?'Bot':'Pemain'}</button>`:'<em>Kamu</em>'}</div>`}).join('')}
+let G=null;
+function start(){G={t:cfg.game,n:cfg.n,cur:0,busy:false,over:false,wait:null,d:0,S:SEATS[cfg.n],...(NET.gx||{})};
+if(G.t=='ludo')G.T=Array.from({length:G.n},()=>[-1,-1,-1,-1]);else G.pos=Array(G.n).fill(0);lyset();rmui('');SFX.music(false);if(G.t=='snake'&&!G.online){const[l,s]=genBoard();LAD=l;SNK=s}
+$('#again').hidden=false;$('#roll').hidden=false;$('#em').hidden=false;$('#onl').hidden=true;$('#setup').hidden=true;$('#menu').hidden=true;$('#game').hidden=false;$('#end').hidden=true;$('#ttl').textContent=G.t=='ludo'?'Ludo':'Ular Tangga';die(1);draw();tick(false,true)}
+const pc=i=>COL[G.t=='ludo'?G.S[i]:i],msg=t=>{$('#msg').textContent=t;if(G){G.m=t;sync()}};
+const TM=25000;
+function tmBar(ms){const b=$('#tmr'),i=$('#tmi');b.hidden=!ms;if(!ms)return;i.style.transition='none';i.style.width='100%';void i.offsetWidth;i.style.transition='width '+ms/1000+'s linear';i.style.width='0%'}
+function tmStart(){if(!G||!G.online||!G.host||G.over)return;clearTimeout(G.tt);G.tm=(G.tm|0)+1;G.tl=TM;tmBar(TM);G.tt=setTimeout(tmFire,TM);sync()}
+function tmStop(){if(!G)return;clearTimeout(G.tt);G.tl=0;if(G.online&&G.host){G.tm=(G.tm|0)+1;sync()}tmBar(0)}
+function tmFire(){if(!G||!G.online||!G.host||G.over)return;const c=G.cur;G.miss=G.miss||{};G.miss[c]=(G.miss[c]||0)+1;
+if(c>0&&G.rem&&G.rem[c]&&G.miss[c]>=3){G.rem[c]=false;cfg.bot[c]=1;G.names[c]='Bot '+BN[c];msg('Terlalu lama, diganti bot')}
+if(G.wait){lMove(c,pick(c,G.d,G.wait))}else if(!G.busy)roll();else tmBar(0)}
+function tick(extra,first){if(!extra&&!first)G.cur=(G.cur+1)%G.n;G.busy=false;strip();const b=cfg.bot[G.cur];if(!b&&!first&&(!G.online||G.cur==G.me))SFX.turn();$('#roll').disabled=!!b||!!(G.rem&&G.rem[G.cur]);msg(b?pname(G.cur)+' lagi main…':pname(G.cur)+', giliranmu'+(extra&&!first?' lagi':''));if(b)setTimeout(roll,850);else tmStart()}
+const PIPS=[[],[4],[0,8],[0,4,8],[0,2,6,8],[0,2,4,6,8],[0,2,3,5,6,8]];
+function die(v){$('#die').innerHTML=Array.from({length:9},(_,i)=>`<b class="${PIPS[v].includes(i)?'p':''}"></b>`).join('')}
+async function roll(){if(G&&G.online&&!G.host){if(G.cur==G.me&&!G.busy&&!G.over){$('#roll').disabled=true;NET.room.emit('act',{t:'roll'})}return}if(!G||G.busy||G.over)return;G.busy=true;tmStop();$('#roll').disabled=true;$('#die').classList.add('rl');for(let i=0;i<8;i++){die(1+Math.random()*6|0);SFX.rattle();await sleep(70)}$('#die').classList.remove('rl');const d=1+Math.random()*6|0;die(d);SFX.land();G.d=d;await sleep(250);G.t=='ludo'?await lRoll(d):await sRoll(d)}
+/* LUDO: papan salib 15x15, 52 kotak jalur */
+const TR=[];(()=>{const a=(c,r)=>TR.push([c,r]);for(let c=1;c<6;c++)a(c,6);for(let r=5;r>=0;r--)a(6,r);a(7,0);for(let r=0;r<6;r++)a(8,r);for(let c=9;c<15;c++)a(c,6);a(14,7);a(14,8);for(let c=13;c>8;c--)a(c,8);for(let r=9;r<15;r++)a(8,r);a(7,14);a(6,14);for(let r=13;r>8;r--)a(6,r);for(let c=5;c>=0;c--)a(c,8);a(0,7);a(0,6)})();
+const HC=(s,k)=>[[1+k,7],[7,1+k],[13-k,7],[7,13-k]][s],BQ=[[0,0],[9,0],[9,9],[0,9]],o=c=>c*20+10;
+const LY4={ring:r=>{const[c,d]=TR[r];return[o(c),o(d)]},home:(s,k)=>{const[c,d]=HC(s,k);return[o(c),o(d)]},base:(s,k)=>{const[c,d]=BQ[s];return[c*20+(k%2?84:36),d*20+(k>1?84:36)]},goal:(s,k)=>[150+11*Math.cos(k*1.57+s),150+11*Math.sin(k*1.57+s)]};
+const S5=12,TH=a=>(180+72*a)*Math.PI/180,P5=(a,u,v)=>{const t=TH(a),p=v+1.6;return[150+S5*(p*Math.cos(t)-u*Math.sin(t)),150+S5*(p*Math.sin(t)+u*Math.cos(t))]},J5=J=>{const a=J/13|0,j=J%13;return j<6?[a,-1,j+1]:j==6?[a,0,6]:[a,1,13-j]};
+const LY5={ring:r=>P5(...J5((r+8)%65)),home:(s,k)=>P5(s,0,5-k),base:(s,k)=>{const t=TH(s)+Math.PI/5;return[150+S5*9*Math.cos(t)+(k%2?1.1:-1.1)*S5,150+S5*9*Math.sin(t)+(k>1?1.1:-1.1)*S5]},goal:(s,k)=>[150+8*Math.cos(k*1.57+s),150+8*Math.sin(k*1.57+s)]};
+function lyset(){const f=G.n==5;G.N=f?65:52;G.RM=G.N-2;G.GL=G.N+4;G.ly=f?LY5:LY4}
+function xy(i,k){const s=G.S[i],p=G.T[i][k],y=G.ly;
+if(p<0)return y.base(s,k);if(p<=G.RM)return y.ring((13*s+p)%G.N);if(p<G.GL)return y.home(s,p-G.N+1);return y.goal(s,k)}
+const lMov=(i,d)=>[0,1,2,3].filter(k=>{const p=G.T[i][k];return p<0?d==6:p+d<=G.GL});
+function hit(i,q){const c=(13*G.S[i]+q)%G.N,r=[];if(c%13==0||c%13==8)return r;G.T.forEach((t,j)=>{if(j!=i)t.forEach((p,m)=>{if(p>=0&&p<=G.RM&&(13*G.S[j]+p)%G.N==c)r.push([j,m])})});return r}
+function pick(i,d,mv){let best=mv[0],bs=-1;for(const k of mv){const p=G.T[i][k],q=p<0?0:p+d;let s=q;if(p<0)s+=50;if(q==G.GL)s+=80;else if(q>G.RM)s+=40;if(q<=G.RM&&hit(i,q).length)s+=100;if(s>bs){bs=s;best=k}}return best}
+async function lRoll(d){const i=G.cur,mv=lMov(i,d);
+if(mv.length)G.tr=0;
+if(!mv.length){SFX.nope();const bs=G.T[i].every(p=>p<0);G.tr=bs?(G.tr|0)+1:0;if(bs&&G.tr<3){msg('Belum dapat 6, coba lagi ('+G.tr+'/3)');await sleep(900);return tick(true)}G.tr=0;msg('Tidak ada pion yang bisa jalan');await sleep(900);return tick(false)}
+if(cfg.bot[i]){await sleep(400);return lMove(i,pick(i,d,mv))}
+if(mv.length==1)return lMove(i,mv[0]);G.wait=mv;draw();msg('Ketuk pion yang melompat');tmStart()}
+async function lMove(i,k){G.wait=null;tmStop();const d=G.d,t=G.T[i];
+if(t[k]<0){t[k]=0;draw();SFX.out();await sleep(250)}else for(let s=0;s<d;s++){t[k]++;draw();SFX.step(s);await sleep(170)}
+let cap=0;if(t[k]<=G.RM)for(const[j,m]of hit(i,t[k])){G.T[j][m]=-1;cap=1;react(j,['cry','ampun','kasian']);tj(j,TL)}
+if(cap){draw();SFX.capture();msg('Pion lawan termakan!');react(i,['smug','noob','ez','wkwk']);tj(i,TW);await sleep(650)}
+if(t[k]==G.GL)SFX.home();if(t.every(p=>p==G.GL))return fin(i);tick(d==6||cap)}
+function dLudo(){let s='<rect width="300" height="300" rx="12" fill="#f4ecd8"/>';
+BQ.forEach(([c,r],q)=>{const on=G.S.includes(q);s+=`<rect x="${c*20}" y="${r*20}" width="120" height="120" fill="${COL[q]}" opacity="${on?1:.22}"/><rect x="${c*20+18}" y="${r*20+18}" width="84" height="84" rx="14" fill="#fff" opacity=".93"/>`;
+for(let k=0;k<4;k++)s+=`<circle cx="${c*20+(k%2?84:36)}" cy="${r*20+(k>1?84:36)}" r="11" fill="${COL[q]}" opacity="${on?.3:.1}"/>`});
+TR.forEach(([c,r],i)=>{const st=i%13==0;s+=`<rect x="${c*20}" y="${r*20}" width="20" height="20" fill="${st?COL[i/13]:'#fffdf6'}" stroke="#0003" stroke-width=".6"/>`;if(i%13==8)s+=`<text x="${c*20+10}" y="${r*20+15}" text-anchor="middle" font-size="13" fill="#0007">★</text>`});
+for(let q=0;q<4;q++)for(let k=0;k<5;k++){const[c,r]=HC(q,k);s+=`<rect x="${c*20}" y="${r*20}" width="20" height="20" fill="${COL[q]}" stroke="#0003" stroke-width=".6"/>`}
+s+=`<polygon points="120,120 120,180 150,150" fill="${COL[0]}"/><polygon points="120,120 180,120 150,150" fill="${COL[1]}"/><polygon points="180,120 180,180 150,150" fill="${COL[2]}"/><polygon points="120,180 180,180 150,150" fill="${COL[3]}"/>`;
+const seen={};G.T.forEach((t,i)=>t.forEach((p,k)=>{let[x,y]=xy(i,k);const key=x.toFixed(0)+','+y.toFixed(0),n=seen[key]=(seen[key]||0)+1;x+=(n-1)*3.5;y-=(n-1)*2;const m=G.wait&&G.cur==i&&G.wait.includes(k);s+=pawn(x,y,COL[G.S[i]],m?'mv':'',`data-k="${k}"`)}));return s}
+function dLudo5(){const ly=G.ly;let s="<rect width='300' height='300' rx='12' fill='#f4ecd8'/><circle cx='150' cy='150' r='148' fill='#fffaf0'/>";
+for(let a=0;a<5;a++){const t=TH(a)+Math.PI/5,cx=150+S5*9*Math.cos(t),cy=150+S5*9*Math.sin(t),on=G.S.includes(a);
+s+=`<circle cx='${cx}' cy='${cy}' r='${S5*3.5}' fill='${COL[a]}' opacity='${on?1:.22}'/><circle cx='${cx}' cy='${cy}' r='${S5*2.8}' fill='#fff' opacity='.93'/>`;
+for(let k=0;k<4;k++){const[x,y]=ly.base(a,k);s+=`<circle cx='${x}' cy='${y}' r='${S5*.8}' fill='${COL[a]}' opacity='${on?.3:.1}'/>`}}
+const cell=(x,y,a,f)=>`<rect x='${-S5/2}' y='${-S5/2}' width='${S5}' height='${S5}' transform='translate(${x} ${y}) rotate(${180+72*a})' fill='${f}' stroke='#0003' stroke-width='.6'/>`;
+for(let r=0;r<65;r++){const[x,y]=ly.ring(r),a=J5((r+8)%65)[0];s+=cell(x,y,a,r%13==0?COL[r/13]:'#fffdf6');if(r%13==8)s+=`<text x='${x}' y='${y+4}' text-anchor='middle' font-size='11' fill='#0007'>★</text>`}
+for(let a=0;a<5;a++)for(let k=0;k<5;k++){const[x,y]=ly.home(a,k);s+=cell(x,y,a,COL[a])}
+for(let a=0;a<5;a++){const t0=TH(a)-Math.PI/5,t1=TH(a)+Math.PI/5,R=S5*2.2;s+=`<polygon points='150,150 ${150+R*Math.cos(t0)},${150+R*Math.sin(t0)} ${150+R*Math.cos(t1)},${150+R*Math.sin(t1)}' fill='${COL[a]}'/>`}
+const seen={};G.T.forEach((t,i)=>t.forEach((p,k)=>{let[x,y]=xy(i,k);const key=x.toFixed(0)+','+y.toFixed(0),n=seen[key]=(seen[key]||0)+1;x+=(n-1)*3;y-=(n-1)*2;const m=G.wait&&G.cur==i&&G.wait.includes(k);s+=pawn(x,y,COL[G.S[i]],m?'mv':'',`data-k='${k}'`,10)}));return s}
+/* ULAR TANGGA */
+let LAD={4:14,9:31,21:42,28:84,51:67,72:91,80:99},SNK={17:7,54:34,62:19,64:60,87:24,93:73,95:75,98:79};
+function genBoard(){const u=new Set([1,100]),L={},S={},R=(a,b)=>a+Math.random()*(b-a+1)|0,row=n=>(n-1)/10|0;
+const add=(m,up,n)=>{let t=0;while(Object.keys(m).length<n&&t++<800){const a=up?R(2,89):R(15,99),l=R(10,up?45:60),b=up?a+l:a-l;if(b<2||b>99||u.has(a)||u.has(b)||row(a)==row(b))continue;u.add(a);u.add(b);m[a]=b}};
+add(L,1,7);add(S,0,8);return[L,S]}
+const vb=b=>{const o={};if(b&&typeof b=='object')Object.entries(b).slice(0,12).forEach(([a,t])=>{a=+a;t=+t;if(Number.isInteger(a)&&Number.isInteger(t)&&a>=2&&a<=99&&t>=1&&t<=100&&a!=t)o[a]=t});return o};
+const cp=n=>{let r=(n-1)/10|0,c=(n-1)%10;if(r%2)c=9-c;return[c*40+20,(9-r)*40+20]};
+async function sRoll(d){const i=G.cur;
+if(G.pos[i]+d>100){SFX.nope();msg('Butuh angka pas untuk sampai 100');await sleep(900);return tick(false)}
+for(let s=0;s<d;s++){G.pos[i]++;draw();SFX.step(s);await sleep(170)}
+const q=G.pos[i];if(LAD[q]||SNK[q]){(LAD[q]?SFX.ladder:SFX.snake)();msg(LAD[q]?'Naik tangga!':'Digigit ular!');react(i,LAD[q]?['smug','ez','wkwk']:['cry','ampun']);tj(i,LAD[q]?TU:TL);await sleep(500);G.pos[i]=LAD[q]||SNK[q];draw();await sleep(500)}
+if(G.pos[i]==100)return fin(i);tick(d==6)}
+function dSnake(){let s='';
+for(let n=1;n<=100;n++){const[x,y]=cp(n);s+=`<rect x="${x-20}" y="${y-20}" width="40" height="40" fill="${((n-1)%10+((n-1)/10|0))%2?'#f4ecd8':'#e6d9b8'}"/><text x="${x-17}" y="${y-10}" class="nm" style="fill:#0007">${n}</text>`}
+for(const a in LAD){const[x1,y1]=cp(+a),[x2,y2]=cp(LAD[a]),dx=x2-x1,dy=y2-y1,l=Math.hypot(dx,dy),ox=-dy/l*5,oy=dx/l*5;
+s+=`<g stroke="#8a5a2b" stroke-width="2.8" stroke-linecap="round"><line x1="${x1+ox}" y1="${y1+oy}" x2="${x2+ox}" y2="${y2+oy}"/><line x1="${x1-ox}" y1="${y1-oy}" x2="${x2-ox}" y2="${y2-oy}"/>`;
+for(let r=1;r<l/14;r++){const f=r*14/l;s+=`<line x1="${x1+dx*f+ox}" y1="${y1+dy*f+oy}" x2="${x1+dx*f-ox}" y2="${y1+dy*f-oy}" stroke-width="2"/>`}s+='</g>'}
+for(const a in SNK){const[x1,y1]=cp(+a),[x2,y2]=cp(SNK[a]),mx=(x1+x2)/2+(y2-y1)*.2,my=(y1+y2)/2-(x2-x1)*.2;
+s+=`<path d="M${x1} ${y1}Q${mx} ${my} ${x2} ${y2}" stroke="#1f9d55" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="12 3"/><circle cx="${x1}" cy="${y1}" r="7" fill="#1f9d55"/><circle cx="${x1-2.5}" cy="${y1-2}" r="1.5" fill="#fff"/><circle cx="${x1+2.5}" cy="${y1-2}" r="1.5" fill="#fff"/>`}
+G.pos.forEach((p,i)=>{let x,y;if(p==0){x=26+i*28;y=412}else{[x,y]=cp(p);x+=((i%3)-1)*10;y+=((i/3|0)-.5)*11}s+=pawn(x,y,COL[i],'','',13)});return s}
+function draw(){$('#board').setAttribute('viewBox',G.t=='ludo'?'0 0 300 300':'0 0 400 424');$('#board').style.background=G.t=='ludo'?'':'#f4ecd8';$('#board').innerHTML=G.t=='ludo'?(G.n==5?dLudo5():dLudo()):dSnake();strip()}
+function strip(){sync();$('#strip').className=G.n>4?'many':'';$('#strip').innerHTML=Array.from({length:G.n},(_,i)=>`<div class="pl${i==G.cur&&!G.over?' on':''}" style="--c:${pc(i)}">${G.em&&G.em[i]?`<span class="bub">${emh(G.em[i])}</span>`:''}${G.ch&&G.ch[i]?`<span class="bub bt">${G.ch[i]}</span>`:''}${avc(i)}<b>${pname(i)}</b><small>${G.t=='ludo'?G.T[i].filter(p=>p==G.GL).length+'/4 pulang':'Kotak '+G.pos[i]}</small></div>`).join('')}
+function fin(i){G.over=true;G.win=i;if(G.spec){SFX.win();rmui('');$('#rm').hidden=true;$('#again').hidden=true;tmBar(0);$('#et').textContent=pname(i)+' menang!';$('#et').style.color=pc(i);$('#ex').textContent='Kamu menonton';$('#end').hidden=false;strip();return}(i==(G.me||0)||(!G.online&&!cfg.bot[i])?SFX.win:SFX.lose)();$('#again').hidden=!!G.online;rmui('');tmStop();const b=lvl(P.xp).l;P.g++;let g=30;if(i==(G.me||0)){P.w++;g+=100}if(G.online&&G.hum>=2&&SBROOM&&SBROOM.db){try{SBROOM.db.rpc('kocok_report',{p_id:P.pid,p_name:P.name,p_won:i==(G.me||0)}).then(()=>{},()=>{})}catch(e){}}P.xp+=g;save();const a=lvl(P.xp).l;
+$('#et').textContent=pname(i)+' menang!';$('#et').style.color=pc(i);$('#ex').textContent='+'+g+' XP'+(a>b?' · Naik ke Level '+a+'!':'');$('#end').hidden=false;$('#roll').disabled=true;strip();if(a>b)setTimeout(()=>lvup(b,a),700)}
+async function lbLoad(){const b=$('#lbl');b.innerHTML="<div class='note'>Memuat…</div>";
+if(!SBROOM||!SBROOM.db){b.innerHTML="<div class='note'>Supabase belum diisi.</div>";return}
+try{const{data,error}=await SBROOM.db.from('kocok_board').select('name,wins,games').order('wins',{ascending:false}).order('games',{ascending:true}).limit(20);if(error)throw error;
+b.innerHTML=data.length?data.map((r,i)=>`<div class="lr${cl(r.name)==P.name?' me':''}"><b>${i+1}</b><span>${cl(r.name)}</span><em>${+r.wins||0} menang · ${+r.games||0} main</em></div>`).join(''):"<div class='note'>Belum ada data. Menangkan game online bareng teman!</div>"}
+catch(e){b.innerHTML="<div class='note'>Peringkat belum bisa dimuat. Pastikan SQL peringkat sudah dijalankan di Supabase.</div>"}}
+document.addEventListener('click',e=>{const t=e.target,c=s=>t.closest&&t.closest(s);let x;if(c('button')&&!c('#roll'))SFX.click();
+if(x=c('[data-g]')){if(x.dataset.g=='online'){onOpen();return}cfg.game=x.dataset.g;$('#setup').hidden=false;setup()}
+else if(x=c('[data-n]')){cfg.n=+x.dataset.n;setup()}
+else if(x=c('[data-s]')){cfg.bot[x.dataset.s]^=1;setup()}
+else if(c('#x'))$('#setup').hidden=true;
+else if(c('#go'))start();
+else if(c('#av')){$('#prof').hidden=false;pedit()}
+else if(c('#px')||c('#pd'))$('#prof').hidden=true;
+else if(c('#lok'))$('#lvup').hidden=true;
+else if(c('#cb'))$('#chat').hidden=false;
+else if(c('#cx'))$('#chat').hidden=true;
+else if(c('#sm')){$('#sk').hidden=false;skr()}
+else if(c('#kx'))$('#sk').hidden=true;
+else if(c('#pf'))$('#pi').click();
+else if(c('#pr')){P.ph='';save();pedit()}
+else if(c('#sa'))$('#sf').click();
+else if(x=c('[data-kd]')){P.mine.splice(+x.dataset.kd,1);save();emrow();skr()}
+else if(x=c('[data-q]')){chat(sid(),TQ[+x.dataset.q]);$('#chat').hidden=true;reply()}
+else if(c('#cs')){const v=$('#ct').value;if(cs(v)){chat(sid(),v);$('#ct').value='';$('#chat').hidden=true;reply()}}
+else if(c('#ox')){$('#onl').hidden=true;if(!G||!G.online)oleave()}
+else if(x=c('[data-oc]')){NET.err='';cfg.game=x.dataset.oc;cfg.n=Math.min(cfg.n,cfg.game=='ludo'?4:5);oconn((Math.random().toString(36)+'0000').slice(2,6),1)}
+else if(c('#oj')){const k=$('#cd').value.toLowerCase().replace(/[^a-z0-9]/g,'');if(k.length!=4){NET.err='Kode terdiri dari 4 huruf atau angka';orender()}else{NET.err='';oconn(k,0)}}
+else if(x=c('[data-on]')){cfg.n=+x.dataset.on;NET.room.presence({n:cfg.n});orender()}
+else if(c('#os'))ostart();
+else if(x=c('#lfr')){P.fr=+x.dataset.f;save();av();$('#lvup').hidden=true}
+else if(x=c('[data-ac]')){P.ac=+x.dataset.ac;save();pedit()}
+else if(x=c('[data-ic]')){P.ic=x.dataset.ic;save();pedit()}
+else if(x=c('[data-fr]')){if(lvl(P.xp).l>=FR[+x.dataset.fr][1]){P.fr=+x.dataset.fr;save();pedit()}}
+else if(x=c('[data-em]')){emote(sid(),x.dataset.em);reply()}
+else if(x=c('[data-me]')){emote(sid(),P.mine[+x.dataset.me]);reply()}
+else if(c('#rm')){if(G&&G.online&&G.over&&!G.rq)NET.room.emit('rq',{nm:P.name})}
+else if(c('#ry')){NET.room.emit('ra',{y:1});rmui('wait','Menunggu teman lain…')}
+else if(c('#rno')){NET.room.emit('ra',{y:0});rmui('')}
+else if(c('#lbo')){$('#lbd').hidden=false;lbLoad()}
+else if(c('#lx'))$('#lbd').hidden=true;
+else if(c('#mb')){P.mus=P.mus===0?1:0;save();mbu();syncMus()}
+else if(c('#mu')){P.snd=P.snd===0?1:0;save();mub();SFX.click()}
+else if(c('#roll'))roll();
+else if(c('#again')){$('#end').hidden=true;start()}
+else if(c('#back')||c('#home')){if(G)clearTimeout(G.tt);tmBar(0);if(G){G.over=true;G.names=null;G.online=0}NET.gx=null;oleave();$('#end').hidden=true;$('#game').hidden=true;$('#menu').hidden=false;menu()}
+else if(x=c('.tk.mv')){const k=+x.dataset.k;if(G&&G.online&&!G.host){if(G.cur==G.me&&G.wait&&G.wait.includes(k))NET.room.emit('act',{t:'mv',k})}else if(G&&G.wait&&G.wait.includes(k)&&!(G.rem&&G.rem[G.cur]))lMove(G.cur,k)}});
+$('#pn').addEventListener('input',e=>{P.name=e.target.value.replace(/[<>&"'`]/g,'').trim().slice(0,14)||'Pemain';save();av()});
+emrow();$('#sf').addEventListener('change',e=>{const f=e.target.files[0];if(f&&f.type.startsWith('image/'))addImg(f);e.target.value=''});$('#pi').addEventListener('change',e=>{const f=e.target.files[0];if(f&&f.type.startsWith('image/'))crop(f,96,d=>{P.ph=d;save();pedit()});e.target.value=''});$('#qs').innerHTML=TQ.map((t,i)=>`<button data-q='${i}'>${t}</button>`).join('');
+mub();menu();
+</script></body></html>
